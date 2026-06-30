@@ -23,7 +23,10 @@ public class DetalleUsuarioService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        Usuario usuario = usuarioService.getUsuarioByUsuario(username);
+        Usuario usuario = usuarioService.getUsuarioByUsername(username);
+        if (usuario == null) {
+            throw new UsernameNotFoundException("Usuario no encontrado");
+        }
         return getUsuarioSeguridadDto(usuario,
                 grantedAuthorityList(usuario.getRol()));
     }

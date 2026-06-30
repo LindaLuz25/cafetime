@@ -25,14 +25,26 @@ public class SecurityConfig {
                 auth.requestMatchers("/auth/login",
                         "/auth/registrar",
                         "/auth/guardarUsuario",
+                        "/api/admin",
                         "/resources/**",
                         "/static/**",
                         "/styles/**",
                         "/scripts/**").permitAll()
+                        .requestMatchers("/admin/**",
+                                "/productos/nuevo",
+                                "/productos/editar/**",
+                                "/productos/eliminar/**",
+                                "/pedido",
+                                "/pedido/*/estado").hasRole("ADMIN")
+                        .requestMatchers("/cliente/**",
+                                "/pedido/**").hasRole("CLIENTE")
+                        .requestMatchers("/productos/**")
+                            .hasAnyRole("ADMIN","CLIENTE")
                         .anyRequest().authenticated()
         ).formLogin(login ->
                 login.loginPage("/auth/login")
-                        .defaultSuccessUrl("/auth/login-success")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/auth/login-success", true)
                         .failureUrl("/auth/login?error=true")
                         .usernameParameter("username")
                         .passwordParameter("password")
