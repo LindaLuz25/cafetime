@@ -22,6 +22,11 @@ public class UsuarioService {
     public Usuario saveUser(Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         Rol rol = rolRepository.findByNombre("ROLE_CLIENTE");
+        if (rol == null) {
+            rol = new Rol();
+            rol.setNombre("ROLE_CLIENTE");
+            rol = rolRepository.save(rol);
+        }
         usuario.setRol(rol);
         usuario.setActivo(true);
         return usuarioRepository.save(usuario);
@@ -30,6 +35,11 @@ public class UsuarioService {
     public Usuario saveAdmin(Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         Rol rol = rolRepository.findByNombre("ROLE_ADMIN");
+        if (rol == null) {
+            rol = new Rol();
+            rol.setNombre("ROLE_ADMIN");
+            rol = rolRepository.save(rol);
+        }
         usuario.setRol(rol);
         usuario.setActivo(true);
         return usuarioRepository.save(usuario);

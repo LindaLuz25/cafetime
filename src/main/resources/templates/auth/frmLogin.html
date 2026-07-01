@@ -92,6 +92,11 @@
                     Sesión cerrada correctamente.
                 </div>
 
+                <div class="alert alert-success border-0 small"
+                     th:if="${registroExitoso}"
+                     th:text="${registroExitoso}">
+                </div>
+
                 <form th:action="@{/auth/login}"
                       method="post"
                       th:object="${form}">

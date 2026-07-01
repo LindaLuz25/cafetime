@@ -54,6 +54,8 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
+        ).csrf(csrf ->
+                csrf.ignoringRequestMatchers("/api/**")
         ).authenticationProvider(authenticationProvider());
         return http.build();
     };

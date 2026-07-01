@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +20,18 @@ import pe.edu.idat.appcafetime.service.UsuarioService;
 public class AuthController {
     private final UsuarioService usuarioService;
     private final RecaptchaService captchaService;
-    private final PasswordEncoder passwordEncoder;
 
     @Value("${recaptcha.site-key}")
     private String recaptchaSiteKey;
 
     @GetMapping("/login")
-    public String login(Model model){
+    public String login(Model model,
+                        @RequestParam(required = false) String registroExitoso){
         model.addAttribute("form", new LoginForm());
         model.addAttribute("recaptchaSiteKey", recaptchaSiteKey);
+        if (registroExitoso != null) {
+            model.addAttribute("registroExitoso", "Registro completado. Ahora puedes iniciar sesion.");
+        }
         return "auth/frmLogin";
     }
 
@@ -74,7 +76,7 @@ public class AuthController {
 
         usuarioService.saveUser(usuario);
 
-        return "redirect:/auth/login";
+        return "redirect:/auth/login?registroExitoso";
     }
 
     @GetMapping("/home")
