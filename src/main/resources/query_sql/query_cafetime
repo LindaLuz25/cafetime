@@ -1,0 +1,95 @@
+CREATE DATABASE cafetime_db;
+USE cafetime_db;
+CREATE TABLE rol(
+    idrol INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL UNIQUE
+);
+CREATE TABLE usuario(
+
+    idusuario INT AUTO_INCREMENT PRIMARY KEY,
+
+    username VARCHAR(50) NOT NULL UNIQUE,
+
+    email VARCHAR(100) NOT NULL UNIQUE,
+
+    password VARCHAR(255) NOT NULL,
+
+    nombre VARCHAR(80),
+
+    apellido VARCHAR(80),
+
+    activo BOOLEAN DEFAULT TRUE,
+
+    idrol INT NOT NULL,
+
+    CONSTRAINT fk_usuario_rol
+        FOREIGN KEY(idrol)
+        REFERENCES rol(idrol)
+
+);
+CREATE TABLE producto(
+
+    idproducto INT AUTO_INCREMENT PRIMARY KEY,
+
+    nombre VARCHAR(100) NOT NULL,
+
+    descripcion VARCHAR(250),
+
+    precio DECIMAL(10,2) NOT NULL,
+
+    stock INT NOT NULL,
+
+    categoria VARCHAR(50),
+
+    imagen VARCHAR(255),
+
+    activo BOOLEAN DEFAULT TRUE
+
+);
+CREATE TABLE pedido(
+
+    idpedido INT AUTO_INCREMENT PRIMARY KEY,
+
+    idusuario INT NOT NULL,
+
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    total DECIMAL(10,2),
+
+    estado VARCHAR(30),
+
+    CONSTRAINT fk_pedido_usuario
+
+        FOREIGN KEY(idusuario)
+
+        REFERENCES usuario(idusuario)
+
+);
+CREATE TABLE detalle_pedido(
+
+    iddetalle INT AUTO_INCREMENT PRIMARY KEY,
+
+    idpedido INT NOT NULL,
+
+    idproducto INT NOT NULL,
+
+    cantidad INT NOT NULL,
+
+    precio DECIMAL(10,2),
+
+    subtotal DECIMAL(10,2),
+
+    CONSTRAINT fk_detalle_pedido
+        FOREIGN KEY(idpedido)
+        REFERENCES pedido(idpedido),
+
+    CONSTRAINT fk_detalle_producto
+        FOREIGN KEY(idproducto)
+        REFERENCES producto(idproducto)
+
+);
+
+INSERT INTO rol(nombre)
+VALUES
+('ROLE_ADMIN'),
+('ROLE_CLIENTE');
